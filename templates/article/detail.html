@@ -1,0 +1,156 @@
+<!-- extends表明此页面继承自 base.html 文件 -->
+{% extends "base.html" %}
+{% load static %}
+
+<!-- 写入 base.html 中定义的 title -->
+{% block title %}
+    文章详情
+{% endblock title %}
+
+<!-- 写入 base.html 中定义的 content -->
+{% block content %}
+
+<style>
+        /* 在大屏幕上隐藏折叠按钮 */
+        @media (min-width: 768px) {
+            .collapse-button {
+                display: none;
+            }
+        }
+
+
+
+    </style>
+
+
+    <style>
+        #toc ul {
+            list-style-type: none; /* 移除小圆点 */
+            padding-left: 0; /* 取消默认的padding */
+        }
+
+          #toc li + li {
+    margin-top: 0; /* 调整上下标签之间的间距 */
+              padding-top: 0;
+
+
+  }
+
+
+           #toc a{
+
+               margin-top: 0;
+               padding-top: 0;
+              }
+
+
+           #toc>ul{
+
+               margin-top: 0;
+               padding-top: 0;
+              }
+    </style>
+    <!-- 文章详情 -->
+<div class="container">
+
+<!-- 模态框 -->
+<div class="modal fade" id="deleteArticleModal" tabindex="-1" aria-labelledby="deleteArticleModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="deleteArticleModalLabel">删除文章</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        确定要删除这篇文章吗？
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">取消</button>
+        <!-- 提交删除请求的表单 -->
+        <form method="POST" action="{% url 'article:article_delete' article.id %}">
+          {% csrf_token %}
+          <button type="submit" class="btn btn-danger">删除</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+    <div class="row flex-column flex-sm-row">
+        <div class="col-12 col-sm-2 mt-3">
+
+            <!-- 折叠按钮，使用data-bs-*属性适配Bootstrap 5 -->
+            <button class="btn btn-primary collapse-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseContent" aria-expanded="false" aria-controls="collapseContent">
+                折叠内容
+            </button>
+            <!-- 折叠内容区 -->
+            <div id="collapseContent" class="collapse">
+
+                    <div id="toc">
+                        {{ toc | safe }}
+    </div>
+            </div>
+        </div>
+
+        <div class="col-12 col-sm-8">
+            <!-- 标题及作者 -->
+            <h1 class="mt-4 mb-4">{{ articlepost.title }}</h1>
+            <div class="alert alert-success ">
+                 <div class="d-flex align-items-center">
+        作者：{{ article.author }}
+
+                     {% if user.is_authenticated %}
+            · <a href="#" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#deleteArticleModal">删除文章</a>
+
+        · <a class="btn btn-primary" href="{% url "article:article_update" article.id %}">编辑文章</a>
+    <!-- 如果用户未登录，则显示 “登录” -->
+    {% else %}
+
+    {% endif %}
+
+
+    </div>
+                </div>
+            <div class=" ">
+                <p>{{ articlepost.body | safe }}</p>
+            </div>
+
+        </div>
+
+        <div class="col-12 col-sm-2 mt-3">
+            <div class="card card-body">
+                    链接内容
+                </div>
+        </div>
+    </div>
+</div>
+
+
+<script>
+$(document).ready(function() {
+    // 在大屏幕上默认展开侧边栏
+    if(window.innerWidth >= 768) {
+        $('#collapseContent').addClass('show');
+    }
+});
+
+
+
+
+</script>
+
+
+    <script>
+document.addEventListener("DOMContentLoaded", function() {
+  // 选中id为toc的div内的所有a标签
+  var links = document.querySelectorAll("#toc a");
+
+  // 为每个a标签添加Bootstrap样式
+  links.forEach(function(link) {
+    link.classList.add("btn", "btn-sm", "my-1"); // 例子使用了primary样式和small大小，以及y轴上的margin为1
+  });
+});
+</script>
+
+
+{% endblock content %}

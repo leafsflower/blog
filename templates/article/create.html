@@ -1,0 +1,69 @@
+<!-- extends表明此页面继承自 base.html 文件 -->
+{% extends "base.html" %}
+{% load static %}
+
+<!-- 写入 base.html 中定义的 title -->
+{% block title %}
+    文章编写
+{% endblock title %}
+
+<!-- 写入 base.html 中定义的 content -->
+{% block content %}
+
+
+
+<style>
+        /* 在大屏幕上隐藏折叠按钮 */
+        @media (min-width: 768px) {
+            .collapse-button {
+                display: none;
+            }
+        }
+
+
+
+    </style>
+    <!-- 文章详情 -->
+<div class="container">
+
+
+
+    <div class="row flex-column flex-sm-row">
+
+
+        <div class="col-12 col-sm-12" style="height: 800px">
+           <h2>Create Article</h2>
+  <form method="POST">
+    {% csrf_token %}
+    {{ form.media }}  <!-- 加载MDEditor需要的JS和CSS -->
+    {{ form.as_p }}
+    <button type="submit">Save</button>
+  </form>
+</div>
+
+        </div>
+
+
+    </div>
+
+
+
+<script>
+$(document).ready(function() {
+    // 在大屏幕上默认展开侧边栏
+    if(window.innerWidth >= 768) {
+        $('#collapseContent').addClass('show');
+    }
+});
+
+
+
+
+</script>
+
+
+
+
+
+
+{% endblock content %}

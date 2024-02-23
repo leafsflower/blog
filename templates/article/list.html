@@ -1,0 +1,38 @@
+<!-- extends表明此页面继承自 base.html 文件 -->
+{% extends "base.html" %}
+{% load static %}
+
+<!-- 写入 base.html 中定义的 title -->
+{% block title %}
+    首页
+{% endblock title %}
+
+<!-- 写入 base.html 中定义的 content -->
+{% block content %}
+
+<!-- 定义放置文章标题的div容器 -->
+<div class="container">
+    <div class="row mt-2">
+<div class="col-12  mb-4">
+        {% for article in articlepost_list %}
+        <!-- 文章内容 -->
+
+
+         <!-- 文章列表 -->
+  <div id="app_article_list " class="mb-3">
+    <div class="list-group">
+      <!-- 示例文章 -->
+      <a class="fs-5" href="{% url 'article:article_detail' pk=article.id %}" style="color: #000000;text-decoration: none;">{{ article.topic }}:{{ article.title }}</a>
+      <a  style="color: #000000;text-decoration: none;font-size: 12px">
+                              {{ article.created }} created
+                          </a>
+        <!-- 更多文章 -->
+    </div>
+  </div>
+
+
+        {% endfor %}
+</div>
+    </div>
+</div>
+{% endblock content %}
